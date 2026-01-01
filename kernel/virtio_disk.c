@@ -121,6 +121,7 @@ virtio_disk_init(void)
   disk.desc = kalloc();
   disk.avail = kalloc();
   disk.used = kalloc();
+  printf("disk.desc = %p\n", disk.desc);
   if(!disk.desc || !disk.avail || !disk.used)
     panic("virtio disk kalloc");
   memset(disk.desc, 0, PGSIZE);
@@ -218,6 +219,8 @@ virtio_disk_rw(struct buf *b, int write)
   uint64 sector = b->blockno * (BSIZE / 512);
 
   acquire(&disk.vdisk_lock);
+
+  printf("virtio_disk_rw blockno %d write %d to 0x%p\n", b->blockno, write, b->data);
 
   // the spec's Section 5.2 says that legacy block operations use
   // three descriptors: one for type/reserved/sector, one for the
